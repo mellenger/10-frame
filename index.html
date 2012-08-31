@@ -6,8 +6,15 @@
   
   <script type='text/javascript' src='http://code.jquery.com/jquery-1.8.0.js'></script>
   
+  <link rel="stylesheet" type="text/css" href="http://fiddle.jshell.net/css/normalize.css">
+  <link rel="stylesheet" type="text/css" href="http://fiddle.jshell.net/css/result-light.css">
+  
   <style type='text/css'>
-    table {
+    body {
+    margin:2em;
+}
+
+table {
     width:100%;
     border-collapse:collapse;
 }        
@@ -37,6 +44,7 @@ table.tenframe td {
   line-height: .25em;
   height: 1.25em;
   cursor:pointer;
+  border:5px solid white;
 }
 td:hover {
     background-color:yellow;
@@ -60,9 +68,11 @@ button  {
   
 
 
-<script>
+<script type='text/javascript'>//<![CDATA[ 
 
 var answer;
+var numcorrect = 0;
+
 
 function fill10frame(num){
     
@@ -74,30 +84,81 @@ function fill10frame(num){
     //add the dots
     for(i=0;i<num;i++){
         $(".tenframe td").eq(i).html('<div class="dot"></div>');
-    }
+    };
     //add the answer
-    $('.choices td').removeClass('correct').eq(num-1).addClass('correct');
+    $('.choices td').removeClass('correct').eq(num).addClass('correct');
 }
 
 
 function loadRando(){
-
-  answer = Math.floor((Math.random()*10)+1);
+  var newanswer = Math.floor((Math.random()*10));
+  answer = (answer == newanswer) ? Math.floor((Math.random()*10)) : newanswer;
   fill10frame(answer);
-
 }
 
+function level2rando(num){
+  
+  //pick the answer
+  loadRando();
+  //make random choices
+  var choices = [0,1,2,3,4,5,6,7,8,9,10];
+  //remove the answer
+  choices.splice(answer,1);
+  //shuffle and slice
+  choices = choices.shuffle().slice(0,num-1);
+  //add answer back in
+  choices.push(answer);
+  //shuffle again
+  choices.shuffle();
+  var thehtml = "";
+  for (var i = choices.length - 1; i >= 0; i--) {
+    var theclass = (choices[i] == answer) ? 'correct' : '';
+    thehtml += "<td class='" + theclass + "'>" + choices[i] + "</td>";
+  };
+  $('.choices tr').html(thehtml);
+}
+
+
+
 $(document).ready(function(){
-  $('.choices td').click(function(){
+
+  $('.choices tr').on("click", "td", function(e){
     $(this).addClass('clicked');
     if($(this).hasClass('correct')){
-      $('#next').fadeIn("slow");
+        $('#next').fadeIn("fast", function(){
+            
+            numcorrect++;
+            if(numcorrect>9){
+              $("caption").html('Level 2 - ' + numcorrect + ' correct');
+              level2rando(4);
+            }else{
+              $("caption").html('Level 1 - ' + numcorrect + ' correct');
+              loadRando();
+            }
+            
+        });
     }
   });
 
   loadRando();
 
 });
+
+//]]>  
+
+//use like
+// var randomSubset = originalArray.shuffle().slice(0,13);
+Array.prototype.shuffle = function() {
+   var i = this.length;
+   while (--i) {
+      var j = Math.floor(Math.random() * (i + 1))
+      var temp = this[i];
+      this[i] = this[j];
+      this[j] = temp;
+   }
+
+   return this; // for convenience, in case we want a reference to the array
+};
 
 </script>
 
@@ -110,10 +171,11 @@ $(document).ready(function(){
   </table>
 <br><br>
   <table class="choices">
-    <tr><td>1</td><td>2</td><td>3</td><td>4</td><td>5</td><td>6</td><td>7</td><td>8</td><td>9</td><td>10</td></tr>
+    <caption>Level 1</caption>
+    <tr><td>0</td><td>1</td><td>2</td><td>3</td><td>4</td><td>5</td><td>6</td><td>7</td><td>8</td><td>9</td><td>10</td></tr>
   </table>
 <br><br>
-<button id="next" onclick="loadRando()">next 10 frame</button>
+<button id="next" onclick="loadRando()">You are Correct!</button>
   
 </body>
 
