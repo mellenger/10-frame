@@ -91,8 +91,8 @@ function fill10frame(num){
 
 
 function loadRando(){
-  var newanswer = Math.floor((Math.random()*10));
-  answer = (answer == newanswer) ? Math.floor((Math.random()*10)) : newanswer;
+  var newanswer = Math.floor((Math.random()*11));
+  answer = (answer == newanswer) ? Math.floor((Math.random()*11)) : newanswer;
   fill10frame(answer);
 }
 
@@ -104,7 +104,7 @@ function level2rando(num){
   var choices = [0,1,2,3,4,5,6,7,8,9,10];
   //remove the answer
   choices.splice(answer,1);
-  //shuffle and slice
+  //shuffle and slice out one less
   choices = choices.shuffle().slice(0,num-1);
   //add answer back in
   choices.push(answer);
