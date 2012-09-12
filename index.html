@@ -1,7 +1,8 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <meta http-equiv="content-type" content="text/html; charset=UTF-8">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="viewport" content="user-scalable=no, width=device-width">
   <title>10 frame</title>
   
   <script type='text/javascript' src='http://code.jquery.com/jquery-1.8.0.js'></script>
@@ -14,14 +15,19 @@
     margin:2em;
 }
 
+h1 {
+  font-family: helvetica, sans-serif;
+  font-size: 120%;
+}
+  
 table {
     width:100%;
     border-collapse:collapse;
 }        
 table td {
-    width:10%;
-    height:4em;
-    border:1px solid #999;
+    width:5em;
+    height:5em;
+    border:3pt solid #999;
     text-align:middle;
 }
 table.tenframe td {
@@ -39,31 +45,79 @@ table.tenframe td {
 
 .choices td {
   text-align: center;
-  font-family: georgia;
+  font-family: helvetica;
   font-size: 3em;
   line-height: .25em;
   height: 1.25em;
   cursor:pointer;
   border:5px solid white;
 }
-td:hover {
+/*td:hover {
     background-color:yellow;
-}
+}*/
 
-td.clicked {
-  background-color: red !important;
-}
-
-.choices td.correct.clicked {
-  background-color: green !important;
-}
-
-button  {
-  display: block;
+button {
+  display: inline-block;
   font-size: 200%;
-  margin: 0 auto;
-  cursor: pointer;
+  cursor: pointer;  
+  -moz-box-shadow:inset 0px 1px 0px 0px #bbdaf7;
+  -webkit-box-shadow:inset 0px 1px 0px 0px #bbdaf7;
+  box-shadow:inset 0px 1px 0px 0px #bbdaf7;
+  background:-webkit-gradient( linear, left top, left bottom, color-stop(0.05, #79bbff), color-stop(1, #378de5) );
+  background:-moz-linear-gradient( center top, #79bbff 5%, #378de5 100% );
+  filter:progid:DXImageTransform.Microsoft.gradient(startColorstr='#79bbff', endColorstr='#378de5');
+  background-color:#79bbff;
+  -moz-border-radius:6px;
+  -webkit-border-radius:6px;
+  border-radius:6px;
+  border:1px solid #84bbf3;
+  color:#ffffff;
+  font-weight:bold;
+  padding:0;
+  text-decoration:none;
+  text-shadow:1px 1px 0px #528ecc;
+  -webkit-tap-highlight-color: rgba(0,0,0,0);
+  width:2em;
+  height:2em;
+  margin:0.25em;
 }
+
+button:active {
+  position:relative;
+  top:1px;
+}
+
+button.clicked {
+  -moz-box-shadow:inset 0px 1px 0px 0px #ffffff;
+  -webkit-box-shadow:inset 0px 1px 0px 0px #ffffff;
+  box-shadow:inset 0px 1px 0px 0px #ffffff;
+  background-color:transparent;
+  -moz-border-radius:6px;
+  -webkit-border-radius:6px;
+  border-radius:6px;
+  border:1px solid #dcdcdc;
+  color:#777777;
+  text-decoration:none;
+  text-shadow:1px 1px 0px #ffffff;
+}
+
+.choices .correct button.clicked {
+  -moz-box-shadow:inset 0px 1px 0px 0px #caefab;
+  -webkit-box-shadow:inset 0px 1px 0px 0px #caefab;
+  box-shadow:inset 0px 1px 0px 0px #caefab;
+  background:-webkit-gradient( linear, left top, left bottom, color-stop(0.05, #77d42a), color-stop(1, #5cb811) );
+  background:-moz-linear-gradient( center top, #77d42a 5%, #5cb811 100% );
+  filter:progid:DXImageTransform.Microsoft.gradient(startColorstr='#77d42a', endColorstr='#5cb811');
+  background-color:#77d42a;
+  -moz-border-radius:6px;
+  -webkit-border-radius:6px;
+  border-radius:6px;
+  border:1px solid #268a16;
+  color:#306108;
+  text-decoration:none;
+  text-shadow:1px 1px 0px #aade7c;
+}
+
   </style>
   
 
@@ -78,7 +132,8 @@ function fill10frame(num){
     
     //reset everything
     $(".tenframe td").html("");
-    $('.choices td').removeClass('clicked correct');
+    $('.choices span').removeClass('correct');
+    $('.choices button').removeClass('clicked');
     $('#next').hide();
 
     //add the dots
@@ -86,7 +141,7 @@ function fill10frame(num){
         $(".tenframe td").eq(i).html('<div class="dot"></div>');
     };
     //add the answer
-    $('.choices td').removeClass('correct').eq(num).addClass('correct');
+    $('.choices span').removeClass('correct').eq(num).addClass('correct');
 }
 
 
@@ -113,7 +168,7 @@ function level2rando(num){
   var thehtml = "";
   for (var i = choices.length - 1; i >= 0; i--) {
     var theclass = (choices[i] == answer) ? 'correct' : '';
-    thehtml += "<td class='" + theclass + "'>" + choices[i] + "</td>";
+    thehtml += "<span class='" + theclass + "'><button>" + choices[i] + "</button></span>";
   };
   $('.choices tr').html(thehtml);
 }
@@ -122,25 +177,29 @@ function level2rando(num){
 
 $(document).ready(function(){
 
-  $('.choices tr').on("click", "td", function(e){
+  $('.choices').on("click", "button", function(e){
     $(this).addClass('clicked');
-    if($(this).hasClass('correct')){
-        $('#next').fadeIn("fast", function(){
+    if($(this).parent().hasClass('correct')){
             
-            numcorrect++;
-            if(numcorrect>9){
-              $("caption").html('Level 2 - ' + numcorrect + ' correct');
-              level2rando(4);
-            }else{
-              $("caption").html('Level 1 - ' + numcorrect + ' correct');
-              loadRando();
-            }
+      numcorrect++;
+      if(numcorrect>9){
+        $("h1").html('Level 2 - ' + numcorrect + ' correct');
+        level2rando(4);
+      }else{
+        $("h1").html('Level 1 - ' + numcorrect + ' correct');
+        loadRando();
+      }
             
-        });
     }
   });
 
   loadRando();
+  //kill the scroll
+  $(document).on("touchmove", function(e){
+    e.preventDefault();
+  });
+
+
 
 });
 
@@ -165,15 +224,25 @@ Array.prototype.shuffle = function() {
 
 </head>
 <body>
+  <h1>Level 1</h1>
   <table class="tenframe">
     <tr><td></td><td></td><td></td><td></td><td></td></tr>
     <tr><td>&nbsp;</td><td></td><td></td><td></td><td></td></tr>
   </table>
 <br><br>
-  <table class="choices">
-    <caption>Level 1</caption>
-    <tr><td>0</td><td>1</td><td>2</td><td>3</td><td>4</td><td>5</td><td>6</td><td>7</td><td>8</td><td>9</td><td>10</td></tr>
-  </table>
+  <div class="choices">
+      <span><button>0</button></span>
+      <span><button>1</button></span>
+      <span><button>2</button></span>
+      <span><button>3</button></span>
+      <span><button>4</button></span>
+      <span><button>5</button></span>
+      <span><button>6</button></span>
+      <span><button>7</button></span>
+      <span><button>8</button></span>
+      <span><button>9</button></span>
+      <span><button>10</button></span>
+  </div>
 <br><br>
 <button id="next" onclick="loadRando()">You are Correct!</button>
   
