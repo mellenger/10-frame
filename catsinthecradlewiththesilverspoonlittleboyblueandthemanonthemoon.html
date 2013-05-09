@@ -1,0 +1,283 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="viewport" content="user-scalable=no, width=device-width">
+  <title>10 frame</title>
+  
+  <script type='text/javascript' src='http://code.jquery.com/jquery-1.8.0.js'></script>
+  
+  <link rel="stylesheet" type="text/css" href="http://fiddle.jshell.net/css/normalize.css">
+  <link rel="stylesheet" type="text/css" href="http://fiddle.jshell.net/css/result-light.css">
+  
+  <style type='text/css'>
+    body {
+    margin:2em 1em 0;
+}
+
+h1 {
+  font-family: helvetica, sans-serif;
+  font-size: 120%;
+}
+  
+table {
+    width:100%;
+    border-collapse:collapse;
+    margin-bottom: 5px;
+}        
+table td {
+    padding:5px 0;
+    border:3pt solid #999;
+    text-align:middle;
+    height: 3em;
+    width: 20%;
+}
+
+.dot {
+    width:3em;
+    height:3em;
+    border-radius:3em;
+    background-size:cover;
+    margin:0 auto;
+}
+
+.dot.cat1{
+  background-image: url('img/Kittens/Cat1.jpg');
+}
+.dot.cat2{
+  background-image: url('img/Kittens/Cat2.jpg');
+}
+.dot.cat3{
+  background-image: url('img/Kittens/Cat3.jpg');
+}
+.dot.cat4{
+  background-image: url('img/Kittens/Cat4.jpg');
+}
+.dot.cat5{
+  background-image: url('img/Kittens/Cat5.jpg');
+}
+.dot.cat6{
+  background-image: url('img/Kittens/Cat6.jpg');
+}
+.dot.cat7{
+  background-image: url('img/Kittens/Cat7.jpg');
+}
+.dot.cat8{
+  background-image: url('img/Kittens/Cat8.jpg');
+}
+.dot.cat9{
+  background-image: url('img/Kittens/Cat9.jpg');
+}
+.dot.cat10{
+  background-image: url('img/Kittens/Cat10.jpg');
+}
+
+.choices {
+  margin:1em 0;
+}
+/*td:hover {
+    background-color:yellow;
+}*/
+
+button {
+  display: inline-block;
+  font-size: 190%;
+  cursor: pointer;  
+  -moz-box-shadow:inset 0px 1px 0px 0px #bbdaf7;
+  -webkit-box-shadow:inset 0px 1px 0px 0px #bbdaf7;
+  box-shadow:inset 0px 1px 0px 0px #bbdaf7;
+  background:-webkit-gradient( linear, left top, left bottom, color-stop(0.05, #79bbff), color-stop(1, #378de5) );
+  background:-moz-linear-gradient( center top, #79bbff 5%, #378de5 100% );
+  filter:progid:DXImageTransform.Microsoft.gradient(startColorstr='#79bbff', endColorstr='#378de5');
+  background-color:#79bbff;
+  -moz-border-radius:6px;
+  -webkit-border-radius:6px;
+  border-radius:6px;
+  border:1px solid #84bbf3;
+  color:#ffffff;
+  font-weight:bold;
+  padding:0;
+  text-decoration:none;
+  text-shadow:1px 1px 0px #528ecc;
+  -webkit-tap-highlight-color: rgba(0,0,0,0);
+  width:2em;
+  height:2em;
+  margin:0 0.2em 0.2em 0;
+}
+
+button:active {
+  position:relative;
+  top:1px;
+}
+
+button.clicked,
+button:active {
+  -moz-box-shadow:inset 0px 1px 0px 0px #ffffff;
+  -webkit-box-shadow:inset 0px 1px 0px 0px #ffffff;
+  box-shadow:inset 0px 1px 0px 0px #ffffff;
+  background-color:transparent;
+  -moz-border-radius:6px;
+  -webkit-border-radius:6px;
+  border-radius:6px;
+  border:1px solid #dcdcdc;
+  color:#777777;
+  text-decoration:none;
+  text-shadow:1px 1px 0px #ffffff;
+}
+
+.choices .correct button:active {
+  -moz-box-shadow:inset 0px 1px 0px 0px #caefab;
+  -webkit-box-shadow:inset 0px 1px 0px 0px #caefab;
+  box-shadow:inset 0px 1px 0px 0px #caefab;
+  background:-webkit-gradient( linear, left top, left bottom, color-stop(0.05, #77d42a), color-stop(1, #5cb811) );
+  background:-moz-linear-gradient( center top, #77d42a 5%, #5cb811 100% );
+  filter:progid:DXImageTransform.Microsoft.gradient(startColorstr='#77d42a', endColorstr='#5cb811');
+  background-color:#77d42a;
+  -moz-border-radius:6px;
+  -webkit-border-radius:6px;
+  border-radius:6px;
+  border:1px solid #268a16;
+  color:#306108;
+  text-decoration:none;
+  text-shadow:1px 1px 0px #aade7c;
+}
+
+  </style>
+  
+
+
+<script type='text/javascript'>//<![CDATA[ 
+
+var answer;
+var numcorrect = 0;
+
+var randCat = function(){
+  var catNumber = Math.floor(Math.random()*10);
+  if( catNumber == 0 ){
+    catNumber = 1;
+  }
+  return catNumber;
+}
+
+function fill10frame(num){
+    
+    //reset everything
+    $(".tenframe td").html("");
+    $('.choices span').removeClass('correct');
+    $('.choices button').removeClass('clicked');
+    $('#next').hide();
+
+    //add the dots
+    for(i=0;i<num;i++){
+        $(".tenframe td").eq(i).html('<div class="dot cat'+ randCat() +'"></div>');
+    };
+    //add the answer
+    $('.choices span').removeClass('correct').eq(num).addClass('correct');
+}
+
+
+function loadRando(){
+  var newanswer = Math.floor((Math.random()*11));
+  answer = (answer == newanswer) ? Math.floor((Math.random()*11)) : newanswer;
+  fill10frame(answer);
+}
+
+function level2rando(num){
+  
+  //pick the answer
+  loadRando();
+  //make random choices
+  var choices = [0,1,2,3,4,5,6,7,8,9,10];
+  //remove the answer
+  choices.splice(answer,1);
+  //shuffle and slice out one less
+  choices = choices.shuffle().slice(0,num-1);
+  //add answer back in
+  choices.push(answer);
+  //shuffle again
+  choices.shuffle();
+  var thehtml = "";
+  for (var i = choices.length - 1; i >= 0; i--) {
+    var theclass = (choices[i] == answer) ? 'correct' : '';
+    thehtml += "<span class='" + theclass + "'><button>" + choices[i] + "</button></span>";
+  };
+  $('.choices').html(thehtml);
+}
+
+
+
+$(document).ready(function(){
+
+  $('.choices').on("click", "button", function(e){
+    $(this).addClass('clicked');
+    if($(this).parent().hasClass('correct')){
+            
+      numcorrect++;
+      if(numcorrect>9){
+        $("h1").html('Level 2 - ' + numcorrect + ' correct');
+        level2rando(4);
+      }else{
+        $("h1").html('Level 1 - ' + numcorrect + ' correct');
+        loadRando();
+      }
+            
+    }
+  });
+
+  loadRando();
+  //kill the scroll
+  $(document).on("touchmove", function(e){
+    e.preventDefault();
+  });
+
+
+
+});
+
+//]]>  
+
+//use like
+// var randomSubset = originalArray.shuffle().slice(0,13);
+Array.prototype.shuffle = function() {
+   var i = this.length;
+   while (--i) {
+      var j = Math.floor(Math.random() * (i + 1))
+      var temp = this[i];
+      this[i] = this[j];
+      this[j] = temp;
+   }
+
+   return this; // for convenience, in case we want a reference to the array
+};
+
+</script>
+
+
+</head>
+<body>
+  <h1>Level 1</h1>
+  <table class="tenframe">
+    <tr><td></td><td></td><td></td><td></td><td></td></tr>
+    <tr><td>&nbsp;</td><td></td><td></td><td></td><td></td></tr>
+  </table>
+  <div class="choices">
+      <span><button>0</button></span>
+      <span><button>1</button></span>
+      <span><button>2</button></span>
+      <span><button>3</button></span>
+      <span><button>4</button></span>
+      <span><button>5</button></span>
+      <span><button>6</button></span>
+      <span><button>7</button></span>
+      <span><button>8</button></span>
+      <span><button>9</button></span>
+      <span><button>10</button></span>
+  </div>
+<br><br>
+<button id="next" onclick="loadRando()">You are Correct!</button>
+  
+</body>
+
+
+</html>
+
