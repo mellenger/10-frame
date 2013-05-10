@@ -149,24 +149,16 @@ button:active {
 <script type='text/javascript'>//<![CDATA[ 
 
 var answer;
-var catid = new Array();
+var catid = new Array('1','2','3','4','5','6','7','8','9','10');
 var numcorrect = 0;
 
 var randCat = function(){
-  var catnumber = Math.floor((Math.random()*9+1));
-  if(! catid.length == 0 ){
-    if($.inArray(catnumber, catid) != -1){
-      catnumber = randCat();
-    }
-  }
-
-  catid.push(catnumber);
-  return catnumber;
-  
+    var catnumber = catid[ Math.floor((Math.random() * catid.length )) ];
+    catid.splice( $.inArray(catnumber, catid), 1 );
+    return catnumber;
 }
 
 function fill10frame(num){
-    catid=[];
     //reset everything
     $(".tenframe td").html("");
     $('.choices span').removeClass('correct');
@@ -183,6 +175,7 @@ function fill10frame(num){
 
 
 function loadRando(){
+  catid = ['1','2','3','4','5','6','7','8','9','10'];
   var newanswer = Math.floor((Math.random()*11));
   answer = (answer == newanswer) ? Math.floor((Math.random()*11)) : newanswer;
   fill10frame(answer);
