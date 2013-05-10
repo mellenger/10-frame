@@ -149,18 +149,24 @@ button:active {
 <script type='text/javascript'>//<![CDATA[ 
 
 var answer;
+var catid = new Array();
 var numcorrect = 0;
 
 var randCat = function(){
-  var catNumber = Math.floor(Math.random()*10);
-  if( catNumber == 0 ){
-    catNumber = 1;
+  var catnumber = Math.floor((Math.random()*9+1));
+  if(! catid.length == 0 ){
+    if($.inArray(catnumber, catid) != -1){
+      catnumber = randCat();
+    }
   }
-  return catNumber;
+
+  catid.push(catnumber);
+  return catnumber;
+  
 }
 
 function fill10frame(num){
-    
+    catid=[];
     //reset everything
     $(".tenframe td").html("");
     $('.choices span').removeClass('correct');
