@@ -12,66 +12,34 @@
   
   <style type='text/css'>
     body {
-    margin:10px 1em 0;
+    margin:0;
 }
 
 h1 {
   font-family: helvetica, sans-serif;
-  font-size: 120%;
+  font-size: 12px;
+  margin:12px;
 }
   
-table {
-    width:100%;
-    border-collapse:collapse;
-    margin-bottom: 5px;
-    border:1px solid #ccc;
+.tenframe {
+  position: absolute;
+  top:30px;
+  left:10px;
+  right:10px;
+  bottom:70px;
 }        
-table td {
-    padding:5px 0;
-    border:0
-    text-align:middle;
-    height: 20%;
-    width: 20%;
-}
 
-table td img {
-    width:100%;
+img {
+    width:10%;
     height:auto;
-}
+    position: absolute;
 
-.dot.cat1{
-  background-image: url('img/Kittens/Cat1.jpg');
-}
-.dot.cat2{
-  background-image: url('img/Kittens/Cat2.jpg');
-}
-.dot.cat3{
-  background-image: url('img/Kittens/Cat3.jpg');
-}
-.dot.cat4{
-  background-image: url('img/Kittens/Cat4.jpg');
-}
-.dot.cat5{
-  background-image: url('img/Kittens/Cat5.jpg');
-}
-.dot.cat6{
-  background-image: url('img/Kittens/Cat6.jpg');
-}
-.dot.cat7{
-  background-image: url('img/Kittens/Cat7.jpg');
-}
-.dot.cat8{
-  background-image: url('img/Kittens/Cat8.jpg');
-}
-.dot.cat9{
-  background-image: url('img/Kittens/Cat9.jpg');
-}
-.dot.cat10{
-  background-image: url('img/Kittens/Cat10.jpg');
 }
 
 .choices {
-  margin:1em 0;
+  position: absolute;
+  bottom:20px;
+  width:90%;
   text-align: center;
 }
 /*td:hover {
@@ -80,7 +48,7 @@ table td img {
 
 button {
   display: inline-block;
-  font-size: 190%;
+  font-size: 16px;
   cursor: pointer;  
   -moz-box-shadow:inset 0px 1px 0px 0px #bbdaf7;
   -webkit-box-shadow:inset 0px 1px 0px 0px #bbdaf7;
@@ -147,7 +115,7 @@ button:active {
 
 <script type='text/javascript'>//<![CDATA[ 
 
-var answer;
+var answer, l, t;
 var catid = new Array('1','2','3','4','5','6','7','8','9','10');
 var numcorrect = 0;
 
@@ -159,15 +127,21 @@ var randCat = function(){
 
 function fill10frame(num){
     //reset everything
-    $(".tenframe td").html("");
+    $(".tenframe").html("");
     $('.choices span').removeClass('correct');
     $('.choices button').removeClass('clicked');
     $('#next').hide();
 
     //add the dots
     for(i=0;i<num;i++){
-        //$(".tenframe td").eq(i).html('<div class="dot cat'+ randCat() +'"></div>');
-        $(".tenframe td").eq(i).html('<img src="img/Kittens/Cat'+ randCat() +'.jpg" />');
+
+      var ln = Math.floor(Math.random() * 8);
+      var tn = Math.floor(Math.random() * 8);
+      l = (ln == l) ? Math.floor((Math.random()*8)) : ln;
+      t = (tn == t) ? Math.floor((Math.random()*8)) : tn;
+      //$(".tenframe td").eq(i).html('<div class="dot cat'+ randCat() +'"></div>');
+      $(".tenframe").append('<img style="top:' + l + '0%;left:' + t + '0%"" src="img/Kittens/Cat'+ randCat() +'.jpg" />');
+    
     };
     //add the answer
     $('.choices span').removeClass('correct').eq(num).addClass('correct');
@@ -255,10 +229,8 @@ Array.prototype.shuffle = function() {
 </head>
 <body>
   <h1>Level 1</h1>
-  <table class="tenframe">
-    <tr><td></td><td></td><td></td><td></td><td></td></tr>
-    <tr><td>&nbsp;</td><td></td><td></td><td></td><td></td></tr>
-  </table>
+  <div class="tenframe">
+  </div>
   <div class="choices">
       <span><button>0</button></span>
       <span><button>1</button></span>
