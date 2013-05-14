@@ -2,11 +2,13 @@
 <html>
 <head>
   <meta name="apple-mobile-web-app-capable" content="yes">
-  <meta name="viewport" content="user-scalable=no, width=device-width">
+  <meta name="viewport" content="user-scalable=no, width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="viewport" content="width=device-width">  
   <title>10 frame</title>
   
   <script type='text/javascript' src='http://code.jquery.com/jquery-1.8.0.js'></script>
-  
+  <script type='application/javascript' src='fastclick.js'></script>
+
   <link rel="stylesheet" type="text/css" href="http://fiddle.jshell.net/css/normalize.css">
   <link rel="stylesheet" type="text/css" href="http://fiddle.jshell.net/css/result-light.css">
   
@@ -48,7 +50,7 @@ img {
 
 button {
   display: inline-block;
-  font-size: 16px;
+  font-size: 24px;
   cursor: pointer;  
   -moz-box-shadow:inset 0px 1px 0px 0px #bbdaf7;
   -webkit-box-shadow:inset 0px 1px 0px 0px #bbdaf7;
@@ -115,7 +117,9 @@ button:active {
 
 <script type='text/javascript'>//<![CDATA[ 
 
-var answer, l, t;
+var answer;
+var l = new Array();
+var t = new Array();
 var catid = new Array('1','2','3','4','5','6','7','8','9','10');
 var numcorrect = 0;
 
@@ -125,26 +129,51 @@ var randCat = function(){
     return catnumber;
 }
 
+function randPos(arr, mult, name){
+  var pos = Math.floor(Math.random() * mult);
+  if(arr.indexOf(pos) == -1){
+    arr[pos] = pos;
+    return pos;
+  }else{
+    console.log(name + ': ' + arr);
+    return randPos(arr, mult);
+  }
+}
+
+// function randTop(array, mult){
+//   var tn = Math.floor(Math.random() * mult);
+//   console.log(tn);
+//   if(t.indexOf(tn) > -1){
+//     t.push(tn);
+//     return tn*2;
+//   }else{
+//     //randLeft(mult);
+//     console.log(t);
+//   }
+// }
+
 function fill10frame(num){
     //reset everything
     $(".tenframe").html("");
     $('.choices span').removeClass('correct');
     $('.choices button').removeClass('clicked');
     $('#next').hide();
+    //empty the arrays
+    l.length = 0;
+    t.length = 0;
 
-    //add the dots
+    //add the cats
     for(i=0;i<num;i++){
 
-      var ln = Math.floor(Math.random() * 8);
-      var tn = Math.floor(Math.random() * 8);
-      l = (ln == l) ? Math.floor((Math.random()*8)) : ln;
-      t = (tn == t) ? Math.floor((Math.random()*8)) : tn;
+      var ln = randPos(l, 15, 'left');
+      var tn = randPos(t, 20, 'top');
       //$(".tenframe td").eq(i).html('<div class="dot cat'+ randCat() +'"></div>');
-      $(".tenframe").append('<img style="top:' + l + '0%;left:' + t + '0%"" src="img/Kittens/Cat'+ randCat() +'.jpg" />');
+      $(".tenframe").append('<img style="top:' + ln*6 + '%;left:' + tn*4 + '%"" src="img/Kittens/Cat'+ randCat() +'.jpg" />');
     
     };
     //add the answer
     $('.choices span').removeClass('correct').eq(num).addClass('correct');
+
 }
 
 
@@ -181,7 +210,9 @@ function level2rando(num){
 
 $(document).ready(function(){
 
-  $('.choices').on("click", "button", function(e){
+  var etype = (is_touch_device()) ? 'touchstart' : 'click';
+
+  $('.choices').on(etype, "button", function(e){
     $(this).addClass('clicked');
     if($(this).parent().hasClass('correct')){
             
@@ -207,7 +238,7 @@ $(document).ready(function(){
 
 });
 
-//]]>  
+
 
 //use like
 // var randomSubset = originalArray.shuffle().slice(0,13);
@@ -223,6 +254,20 @@ Array.prototype.shuffle = function() {
    return this; // for convenience, in case we want a reference to the array
 };
 
+
+//speed up clicking on iOS safari
+window.addEventListener('load', function(){
+  new FastClick(document.body);
+}, false);
+
+
+function is_touch_device() {
+  return !!('ontouchstart' in window) // works on most browsers 
+      || !!('onmsgesturechange' in window); // works on ie10
+};
+
+
+//]]>  
 </script>
 
 
