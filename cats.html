@@ -8,6 +8,7 @@
   
   <script type='text/javascript' src='http://code.jquery.com/jquery-1.8.0.js'></script>
   <script type='application/javascript' src='fastclick.js'></script>
+  <script type='application/javascript' src='timer.js'></script>
 
   <link rel="stylesheet" type="text/css" href="http://fiddle.jshell.net/css/normalize.css">
   <link rel="stylesheet" type="text/css" href="http://fiddle.jshell.net/css/result-light.css">
@@ -166,9 +167,9 @@ function fill10frame(num){
     for(i=0;i<num;i++){
 
       var ln = randPos(l, 15, 'left');
-      var tn = randPos(t, 20, 'top');
+      var tn = randPos(t, 15, 'top');
       //$(".tenframe td").eq(i).html('<div class="dot cat'+ randCat() +'"></div>');
-      $(".tenframe").append('<img style="top:' + ln*6 + '%;left:' + tn*4 + '%"" src="img/Kittens/Cat'+ randCat() +'.jpg" />');
+      $(".tenframe").append('<img style="top:' + ln*6 + '%;left:' + tn*4 + '%"" src="img/Kittens/'+ randCat() +'.png" />');
     
     };
     //add the answer
