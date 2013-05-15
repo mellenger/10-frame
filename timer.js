@@ -30,6 +30,23 @@ $(document).ready(function(){
 		window.laptimer();
 	});
 
-	setInterval(function(){ $('.correct button').click();},50)
+	var konami = function(){
+		var konamiKeys = new Array();
+		konamiKeys = [38,38,40,40,37,39,37,39,65,66,13]
+		$('body').bind('keydown', function(e){
+			console.log(e.keyCode);
+			if(konamiKeys[0] == e.keyCode){
+				konamiKeys.shift();
+				console.log(konamiKeys);
+				if(konamiKeys.length < 1){
+					setInterval(function(){ $('.correct button').click();},50);
+				}
+			}
+		});
+	}
+	konami();
+
+
+	
 
 });
