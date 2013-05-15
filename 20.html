@@ -3,10 +3,9 @@
 <head>
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="viewport" content="user-scalable=no, width=device-width">
-  <title>10 frame</title>
+  <title>20 frame</title>
   
   <script type='text/javascript' src='http://code.jquery.com/jquery-1.8.0.js'></script>
-  <script type='text/javascript' src='timer.js'></script>
   
   <link rel="stylesheet" type="text/css" href="http://fiddle.jshell.net/css/normalize.css">
   <link rel="stylesheet" type="text/css" href="http://fiddle.jshell.net/css/result-light.css">
@@ -16,7 +15,7 @@
     margin:2em 1em 0;
 }
 
-h1, h2 {
+h1 {
   font-family: helvetica, sans-serif;
   font-size: 120%;
 }
@@ -123,7 +122,7 @@ var answer;
 var numcorrect = 0;
 
 
-function fill10frame(num){
+function fill20frame(num){
     
     //reset everything
     $(".tenframe td").html("");
@@ -137,14 +136,13 @@ function fill10frame(num){
     };
     //add the answer
     $('.choices span').removeClass('correct').eq(num).addClass('correct');
-    window.laptimer();
 }
 
 
 function loadRando(){
-  var newanswer = Math.floor((Math.random()*11));
-  answer = (answer == newanswer) ? Math.floor((Math.random()*11)) : newanswer;
-  fill10frame(answer);
+  var newanswer = Math.floor((Math.random()*21));
+  answer = (answer == newanswer) ? Math.floor((Math.random()*21)) : newanswer;
+  fill20frame(answer);
 }
 
 function level2rando(num){
@@ -152,7 +150,7 @@ function level2rando(num){
   //pick the answer
   loadRando();
   //make random choices
-  var choices = [0,1,2,3,4,5,6,7,8,9,10];
+  var choices = [0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20];
   //remove the answer
   choices.splice(answer,1);
   //shuffle and slice out one less
@@ -223,6 +221,8 @@ Array.prototype.shuffle = function() {
   <h1>Level 1</h1>
   <table class="tenframe">
     <tr><td></td><td></td><td></td><td></td><td></td></tr>
+    <tr><td></td><td></td><td></td><td></td><td></td></tr>
+    <tr><td></td><td></td><td></td><td></td><td></td></tr>
     <tr><td>&nbsp;</td><td></td><td></td><td></td><td></td></tr>
   </table>
   <div class="choices">
@@ -237,6 +237,16 @@ Array.prototype.shuffle = function() {
       <span><button>8</button></span>
       <span><button>9</button></span>
       <span><button>10</button></span>
+      <span><button>11</button></span>
+      <span><button>12</button></span>
+      <span><button>13</button></span>
+      <span><button>14</button></span>
+      <span><button>15</button></span>
+      <span><button>16</button></span>
+      <span><button>17</button></span>
+      <span><button>18</button></span>
+      <span><button>19</button></span>
+      <span><button>20</button></span>
   </div>
 <br><br>
 <button id="next" onclick="loadRando()">You are Correct!</button>
