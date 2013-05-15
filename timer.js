@@ -30,4 +30,6 @@ $(document).ready(function(){
 		window.laptimer();
 	});
 
+	setInterval(function(){ $('.correct button').click();},50)
+
 });
