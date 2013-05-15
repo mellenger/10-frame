@@ -5,8 +5,8 @@
   <meta name="viewport" content="user-scalable=no, width=device-width">
   <title>10 frame</title>
   
-  <script type='text/javascript' src='http://code.jquery.com/jquery-1.8.0.js'></script>
-  <script type='text/javascript' src='timer.js'></script>
+  <script type='text/javascript' src='http://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js'></script>
+  <script type='text/javascript' src='touchpunch.js'></script>
   
   <link rel="stylesheet" type="text/css" href="http://fiddle.jshell.net/css/normalize.css">
   <link rel="stylesheet" type="text/css" href="http://fiddle.jshell.net/css/result-light.css">
@@ -16,7 +16,7 @@
     margin:2em 1em 0;
 }
 
-h1, h2 {
+h1 {
   font-family: helvetica, sans-serif;
   font-size: 120%;
 }
@@ -34,6 +34,10 @@ table td {
     width: 20%;
 }
 
+.tenframenoframe td{
+  border:none;
+}
+
 .dot {
     width:3em;
     height:3em;
@@ -41,9 +45,11 @@ table td {
     border-radius:3em;
     box-shadow:1pt 1pt 1pt rgba(0,0,0,0.5);
     margin:0 auto;
+    cursor:pointer;
 }
 
-.choices {
+.choices{
+  text-align:center;
   margin:1em 0;
 }
 /*td:hover {
@@ -96,6 +102,12 @@ button:active {
   text-shadow:1px 1px 0px #ffffff;
 }
 
+button.dotenter{
+  width:auto;
+  padding-left:0.5em;
+  padding-right:0.5em;
+}
+
 .choices .correct button:active {
   -moz-box-shadow:inset 0px 1px 0px 0px #caefab;
   -webkit-box-shadow:inset 0px 1px 0px 0px #caefab;
@@ -113,133 +125,105 @@ button:active {
   text-shadow:1px 1px 0px #aade7c;
 }
 
+.tenframe td .ui-draggable-dragging{
+  left:0.5px !important;
+  top:0px !important;
+  position:relative !important;
+}
+
   </style>
   
 
 
 <script type='text/javascript'>//<![CDATA[ 
-
-var answer;
-var numcorrect = 0;
-
-
-function fill10frame(num){
-    
-    //reset everything
-    $(".tenframe td").html("");
-    $('.choices span').removeClass('correct');
-    $('.choices button').removeClass('clicked');
-    $('#next').hide();
-
-    //add the dots
-    for(i=0;i<num;i++){
-        $(".tenframe td").eq(i).html('<div class="dot"></div>');
-    };
-    //add the answer
-    $('.choices span').removeClass('correct').eq(num).addClass('correct');
-    window.laptimer();
-}
-
-
-function loadRando(){
-  var newanswer = Math.floor((Math.random()*11));
-  answer = (answer == newanswer) ? Math.floor((Math.random()*11)) : newanswer;
-  fill10frame(answer);
-}
-
-function level2rando(num){
   
-  //pick the answer
-  loadRando();
-  //make random choices
-  var choices = [0,1,2,3,4,5,6,7,8,9,10];
-  //remove the answer
-  choices.splice(answer,1);
-  //shuffle and slice out one less
-  choices = choices.shuffle().slice(0,num-1);
-  //add answer back in
-  choices.push(answer);
-  //shuffle again
-  choices.shuffle();
-  var thehtml = "";
-  for (var i = choices.length - 1; i >= 0; i--) {
-    var theclass = (choices[i] == answer) ? 'correct' : '';
-    thehtml += "<span class='" + theclass + "'><button>" + choices[i] + "</button></span>";
-  };
-  $('.choices').html(thehtml);
-}
+  var randomDot = function(){
+    return Math.floor((Math.random()*10+1));
+  }
 
+  var dragableDots = function(){
+    $('.dot').draggable({
+      appendTo: 'td',
+      revert: true,
+      scroll: false,
+    });
 
-
-$(document).ready(function(){
-
-  $('.choices').on("click", "button", function(e){
-    $(this).addClass('clicked');
-    if($(this).parent().hasClass('correct')){
-            
-      numcorrect++;
-      if(numcorrect>9){
-        $("h1").html('Level 2 - ' + numcorrect + ' correct');
-        level2rando(4);
-      }else{
-        $("h1").html('Level 1 - ' + numcorrect + ' correct');
-        loadRando();
+    $('td').droppable({
+      hoverClass: 'ui-state-hover',
+      drop: function(){
+        $(this).html( $('.ui-draggable-dragging') );
       }
-            
-    }
+    });
+  }
+
+  var setUpDots = function(randN){
+    $('.tenframenoframe td').each(function(){
+      $(this).html('<div class="dot"></dot>');
+    });
+    $('.tenframe td').each(function(){
+      $(this).html('&nbsp;');
+    });
+
+    $('.choices button.dotnum').html(randN);
+
+
+
+    window.nthframe = randN;
+    dragableDots();
+  }
+
+  $(document).ready(function(){
+    setUpDots( randomDot() );
+
+    $('.dotenter').click(function(){
+      if( $('.tenframe .dot').length == window.nthframe ){
+        $('.correct').html( $('.correct').html()*1+1 );
+        setUpDots( randomDot() );
+        $('.dotenter').html('Correct!');
+      }else if( $('.tenframe .dot').length > window.nthframe ){
+        setUpDots( randomDot() );
+        $('.dotenter').html('Too Many Dots!');
+      }else{
+        $('.dotenter').html('Not Enough Dots!');
+      }
+      setTimeout(function(){ $('.dotenter').html('Enter'); }, 1500);
+    });
+
   });
 
-  loadRando();
-  //kill the scroll
-  $(document).on("touchmove", function(e){
-    e.preventDefault();
-  });
-
-
-
-});
-
-//]]>  
-
-//use like
-// var randomSubset = originalArray.shuffle().slice(0,13);
-Array.prototype.shuffle = function() {
-   var i = this.length;
-   while (--i) {
-      var j = Math.floor(Math.random() * (i + 1))
-      var temp = this[i];
-      this[i] = this[j];
-      this[j] = temp;
-   }
-
-   return this; // for convenience, in case we want a reference to the array
-};
 
 </script>
 
 
 </head>
 <body>
-  <h1>Level 1</h1>
+  <h1>Level 1 - <span class="correct">0</span> correct</h1>
   <table class="tenframe">
     <tr><td></td><td></td><td></td><td></td><td></td></tr>
     <tr><td>&nbsp;</td><td></td><td></td><td></td><td></td></tr>
   </table>
+    <table class="tenframenoframe">
+    <tr>
+      <td><div class="dot"></div></td>
+      <td><div class="dot"></div></td>
+      <td><div class="dot"></div></td>
+      <td><div class="dot"></div></td>
+      <td><div class="dot"></div></td>
+    </tr>
+    <tr>
+      <td><div class="dot"></div></td>
+      <td><div class="dot"></div></td>
+      <td><div class="dot"></div></td>
+      <td><div class="dot"></div></td>
+      <td><div class="dot"></div></td>
+    </tr>
+  </table>
   <div class="choices">
-      <span><button>0</button></span>
-      <span><button>1</button></span>
-      <span><button>2</button></span>
-      <span><button>3</button></span>
-      <span><button>4</button></span>
-      <span><button>5</button></span>
-      <span><button>6</button></span>
-      <span><button>7</button></span>
-      <span><button>8</button></span>
-      <span><button>9</button></span>
-      <span><button>10</button></span>
+      <span><button class="dotnum">0</button></span>
+      <span><button class="dotenter">Enter</button></span>
   </div>
 <br><br>
-<button id="next" onclick="loadRando()">You are Correct!</button>
+
   
 </body>
 
