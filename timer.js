@@ -26,4 +26,8 @@ $(document).ready(function(){
 		$('.timer span').html( Math.floor( (window.timerseconds/60) ) + ':' + secondscalc(window.timerseconds) );
 	}, 1000);
 
+	$('.correct button').click(function(){
+		window.laptimer();
+	});
+
 });
